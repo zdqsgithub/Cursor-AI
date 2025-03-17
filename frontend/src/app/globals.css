@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* New color palette based on orange-yellow gradient */
+  --primary-50: #fff8f0;
+  --primary-100: #ffedd0;
+  --primary-200: #ffdfaa;
+  --primary-300: #ffd085;
+  --primary-400: #ffc25e;
+  --primary-500: #ff9d1b; /* Primary orange */
+  --primary-600: #f08200;
+  --primary-700: #d67300;
+  --primary-800: #b35f00;
+  --primary-900: #8a4a00;
+  
+  --secondary-50: #fffde6;
+  --secondary-100: #fffacc;
+  --secondary-200: #fff7a8;
+  --secondary-300: #fff485;
+  --secondary-400: #fff061;
+  --secondary-500: #ffeb3b; /* Secondary yellow */
+  --secondary-600: #e6d435;
+  --secondary-700: #ccbc2f;
+  --secondary-800: #b3a529;
+  --secondary-900: #998e23;
+  
+  --accent-50: #fff5e6;
+  --accent-100: #ffe8c2;
+  --accent-200: #ffd999;
+  --accent-300: #ffca70;
+  --accent-400: #ffbb47;
+  --accent-500: #ffac1f; /* Accent light orange */
+  --accent-600: #e69b1c;
+  --accent-700: #cc8a19;
+  --accent-800: #b37916;
+  --accent-900: #996812;
+  
+  /* Gradient definitions */
+  --primary-gradient: linear-gradient(to right, var(--primary-500), var(--accent-500), var(--secondary-500));
+  --card-shadow: 0 4px 6px -1px rgba(255, 157, 27, 0.1), 0 2px 4px -1px rgba(255, 157, 27, 0.06);
+  --hover-transform: translateY(-5px);
+  --transition-speed: 0.3s;
+}
+
+/* Light mode */
+:root {
+  --foreground-rgb: 50, 40, 30;
+  --background-start-rgb: 245, 242, 235;
+  --background-end-rgb: 252, 249, 242;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 50, 40, 30;
+    --background-start-rgb: 245, 235, 220;
+    --background-end-rgb: 235, 225, 210;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+  @apply bg-amber-50 text-amber-900;
+}
+
+@layer components {
+  .btn-primary {
+    @apply px-4 py-2 bg-gradient-to-r from-primary-600 via-accent-600 to-secondary-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transform transition-all duration-300 hover:scale-105;
+  }
+  
+  .btn-secondary {
+    @apply px-4 py-2 bg-white text-primary-700 border border-primary-600 rounded-lg font-medium shadow-sm hover:shadow-md transform transition-all duration-300 hover:scale-105;
+  }
+  
+  .card {
+    @apply bg-amber-50 rounded-xl shadow-md p-6 transition-all duration-300 hover:shadow-xl border border-amber-200;
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-2 bg-white text-amber-900 border border-amber-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all duration-200;
+  }
+  
+  .gradient-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-primary-700 via-accent-700 to-secondary-700 font-bold;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+  
+  .animate-pulse-slow {
+    animation: pulse 2s infinite;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.creator-card {
+  @apply transition-all duration-300;
+}
+
+.creator-card:hover {
+  @apply transform translate-y-[-5px] border-primary-300 dark:border-primary-700;
+  box-shadow: 0 10px 25px -5px rgba(255, 157, 27, 0.1), 0 10px 10px -5px rgba(255, 157, 27, 0.04);
+}
+
+.navbar-link {
+  @apply relative;
+}
+
+.navbar-link::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-primary-500 via-accent-500 to-secondary-500 transition-all duration-300;
+}
+
+.navbar-link:hover::after {
+  @apply w-full;
+}
+
+/* Animation delays */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+/* Blob animation for hero section */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Navbar styles for beige theme */
+.navbar-beige {
+  @apply bg-amber-50/90 backdrop-blur-md border-b border-amber-200 shadow-sm;
+} 

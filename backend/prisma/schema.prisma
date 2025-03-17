@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String         @id @default(uuid())
+  email             String         @unique
+  username          String         @unique
+  password          String
+  role              String         @default("user") // user, creator, admin
+  profileImage      String?
+  bio               String?
+  walletAddress     String?        @unique
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  // Relations
+  createdContent    Content[]      @relation("CreatedContent")
+  sentTransactions  Transaction[]  @relation("SentTransactions")
+  receivedTransactions Transaction[] @relation("ReceivedTransactions")
+  subscriptions     Subscription[] @relation("Subscriptions")
+  subscribers       Subscription[] @relation("Subscribers")
+}
+
+model Content {
+  id               String        @id @default(uuid())
+  title            String
+  description      String
+  contentType      String        // article, video, image, audio
+  contentUrl       String?
+  thumbnailUrl     String?
+  price            Float         @default(0)
+  currency         String        @default("ETH")
+  isPublic         Boolean       @default(false)
+  isFeatured       Boolean       @default(false)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  // Relations
+  creatorId        String
+  creator          User          @relation("CreatedContent", fields: [creatorId], references: [id])
+  transactions     Transaction[] @relation("ContentTransactions")
+}
+
+model Transaction {
+  id               String        @id @default(uuid())
+  transactionHash  String        @unique
+  amount           Float
+  currency         String
+  type             String        // subscription, content, tip
+  status           String        // pending, completed, failed
+  metadata         String?       // JSON stored as string for SQLite
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  // Relations
+  senderId         String
+  sender           User          @relation("SentTransactions", fields: [senderId], references: [id])
+  recipientId      String
+  recipient        User          @relation("ReceivedTransactions", fields: [recipientId], references: [id])
+  contentId        String?
+  content          Content?      @relation("ContentTransactions", fields: [contentId], references: [id])
+  subscriptions    Subscription[] @relation("SubscriptionTransactions")
+}
+
+model Subscription {
+  id               String        @id @default(uuid())
+  status           String        // active, cancelled, expired
+  expiresAt        DateTime
+  planId           String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  // Relations
+  subscriberId     String
+  subscriber       User          @relation("Subscriptions", fields: [subscriberId], references: [id])
+  creatorId        String
+  creator          User          @relation("Subscribers", fields: [creatorId], references: [id])
+  lastTransactionId String?
+  lastTransaction  Transaction?  @relation("SubscriptionTransactions", fields: [lastTransactionId], references: [id])
+} 
